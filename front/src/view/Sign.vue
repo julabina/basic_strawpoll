@@ -75,6 +75,8 @@
      * create account on database
      */
     const signUp = () => {
+        const errorCont = document.getElementById('signError');
+
         fetch(apiUrl + '/api/user/sign',{
             headers: {
                 'Accept': 'application/json',
@@ -86,6 +88,17 @@
             .then(res => {
                 if (res.status === 201) {
 
+                } else {
+                    res.json()
+                        .then(data => {
+                            const error = document.createElement('p');
+                            if (data.message) {
+                                error.textContent = "- " + data.message;
+                            } else {
+                                error.textContent = "- Une erreur est survenue.";
+                            }
+                            errorCont.appendChild(error);
+                        })
                 }
             })
     };
