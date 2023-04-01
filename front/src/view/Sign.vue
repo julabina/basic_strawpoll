@@ -1,7 +1,7 @@
 <template> 
     <main class="flex flex-col items-center bg-violet-950 min-h-screen">
-        <div id="signError" class="mt-48 w-80 mb-4 text-red-600 text-xs px-4"></div>
-        <form @submit="validateSign" class="border p-4 text-gray-100 transition-colors w-80">
+        <div ref="errorCont" class="mt-48 w-80 mb-4 text-red-600 text-xs px-4"></div>
+        <form @submit.prevent="validateSign" class="border p-4 text-gray-100 transition-colors w-80">
             <div class="flex flex-col">
                 <label class="mt-3 mb-0.5" for="logEmail">Adresse email</label>
                 <input v-model="signInput.email" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="email" id="logEmail">
@@ -16,15 +16,20 @@
             </div>
             <input class="bg-blue-600 h-8 rounded cursor-pointer text-white w-full mt-6 hover:bg-blue-500 transition-colors" type="submit" value="Créer un compte">
         </form>
+        <RouterLink class="w-80" to="/login">
+            <p class="text-right text-gray-100 mt-1 transition-colors hover:text-gray-400 hover:transition-colors">Se connecter à un compte</p>
+        </RouterLink>
     </main>    
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, reactive } from 'vue';
+
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    const logged = ref([false]);
-    const signInput = ref({
+    const logged = ref(false);
+    const errorCont = ref(null);
+    const signInput = reactive({
         email: "",
         password: "",
         confirm: ""
@@ -39,33 +44,30 @@
      * 
      * @param {*} e 
      */
-    const validateSign = (e) => {
-        e.preventDefault();
-        const errorCont = document.getElementById('signError');
-
-        errorCont.innerHTML = "";
+    const validateSign = () => {
+        errorCont.value.innerHTML = "";
         
-        if (signInput.value.email === "" || signInput.value.password === "" || signInput.value.confirm === "") {
+        if (signInput.email === "" || signInput.password === "" || signInput.confirm === "") {
             let error = document.createElement('p');
             error.textContent = '- Tous les champs sont requis.';
-            return errorCont.appendChild(error);
+            return errorCont.value.appendChild(error);
         }
         
-        if (signInput.value.password !== signInput.value.confirm) {
+        if (signInput.password !== signInput.confirm) {
             let error = document.createElement('p');
             error.textContent = '- Les mots de passe doivent être identiques.';
-            return errorCont.appendChild(error);
+            return errorCont.value.appendChild(error);
         }
 
-        if (!signInput.value.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) {
+        if (!signInput.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) {
             let error = document.createElement('p');
             error.textContent = '- L\' email n\'a pas un format valide.';
-            return errorCont.appendChild(error);
+            return errorCont.value.appendChild(error);
         }
-        if (!signInput.value.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/) || !signInput.value.confirm.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)) {
+        if (!signInput.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/) || !signInput.confirm.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)) {
             let error = document.createElement('p');
             error.textContent = '- Le mot de passe doit contenir minimun 1 lettre 1 chiffre 1 lettre majuscule et 8 caractères.';
-            return errorCont.appendChild(error);
+            return errorCont.value.appendChild(error);
         }
 
         signUp();
@@ -75,15 +77,13 @@
      * create account on database
      */
     const signUp = () => {
-        const errorCont = document.getElementById('signError');
-
         fetch(apiUrl + '/api/user/sign',{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             method: 'POST',
-            body: JSON.stringify({ email: signInput.value.email, password: signInput.value.password })
+            body: JSON.stringify({ email: signInput.email, password: signInput.password })
         })
             .then(res => {
                 if (res.status === 201) {
@@ -97,10 +97,12 @@
                             } else {
                                 error.textContent = "- Une erreur est survenue.";
                             }
-                            errorCont.appendChild(error);
+                            errorCont.value.appendChild(error);
                         })
+                        .catch(err => console.log(err));
                 }
             })
+            .catch(err => console.log(err));
     };
 </script>
 

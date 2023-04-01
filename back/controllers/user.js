@@ -68,3 +68,58 @@ exports.sign = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ message: error }));
 };
+
+/**
+ * log one user
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+exports.login = (req, res, next) => {
+    console.log("hola", req.body);
+    if (req.body.email === undefined || req.body.password === undefined) {
+        const message = 'Des données sont manquantes.';
+        return res.status(401).json({ message });
+    }
+    
+    if (!req.body.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)) {
+        const message = "Le mot de passe doit contenir minimun 1 lettre 1 chiffre 1 lettre majuscule et 8 caractères.";
+        return res.status(401).json({ message });
+    } else if (!req.body.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) {
+        const message = "L' email n'a pas un format valide.";
+        return res.status(401).json({ message });
+    } else if (req.body.password === "" || req.body.email === "") {
+        const message = "Le mot de passe et l'email ne doivent pas être vides.";
+        return res.status(401).json({ message });
+    }
+
+    User.findOne({ where: { email: req.body.email } })
+        .then(user => {
+            if (user === null) {
+                const message = "Aucun utilisateur trouvé.";
+                return res.status(404).json({ message });
+            }
+
+            bcrypt.compare(req.body.password, user.password)
+                .then(valid => {
+                    if (!valid) {
+                        const message = "Le mot de passe est incorrect.";
+                        return res.status(401).json({ message });
+                    }
+
+                    const message = "Utilisateur connecté.";
+                    res.status(200).json({
+                        userId: user.id,
+                        token: jwt.sign(
+                            { userId: user.id },
+                            '' + process.env.VUE_APP_JWT_PRIVATE_KEY + '',
+                            { expiresIn: '24h' }
+                        ),
+                        message
+                    });
+                })
+                .catch(error => res.status(500).json({ message: error }));
+        })
+        .catch(error => res.status(500).json({ message: error }));
+};
