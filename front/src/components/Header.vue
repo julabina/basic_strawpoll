@@ -19,7 +19,7 @@
                     <input class="h-8 px-4 rounded cursor-pointer text-white mr-1.5 transition-colors hover:text-gray-400 hover:transition-colors" type="button" value="Se connecter">
                 </RouterLink>
                 <RouterLink to="/signup">
-                    <input class="bg-blue-600 h-8 px-4 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors" type="button" value="S'enregistrer">
+                    <input class="bg-blue-600 h-8 px-4 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors" type="button" value="S'inscrire">
                 </RouterLink>
             </div>
         </div>
