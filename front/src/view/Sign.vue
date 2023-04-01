@@ -1,29 +1,35 @@
 <template> 
+    <Header :isLogged="logged"/>
     <main class="flex flex-col items-center bg-violet-950 min-h-screen">
-        <div ref="errorCont" class="mt-48 w-80 mb-4 text-red-600 text-xs px-4"></div>
-        <form @submit.prevent="validateSign" class="border p-4 text-gray-100 transition-colors w-80">
-            <div class="flex flex-col">
-                <label class="mt-3 mb-0.5" for="logEmail">Adresse email</label>
-                <input v-model="signInput.email" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="email" id="logEmail">
-            </div>
-            <div class="flex flex-col">
-                <label class="mt-3 mb-0.5" for="logPassword">Mot de passe</label>
-                <input v-model="signInput.password" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="password" id="logPassword">
-            </div>
-            <div class="flex flex-col">
-                <label class="mt-3 mb-0.5" for="logConfirmPassword">Confirmation mot de passe</label>
-                <input v-model="signInput.confirm" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="password" id="logConfirmPassword">
-            </div>
+        <input v-if="logged === true" @click="logout" class="bg-blue-600 w-44 h-8 rounded cursor-pointer text-white mt-48 hover:bg-blue-500 transition-colors" type="button" value="Se deconnecter">
+        <section v-else>
+            <div ref="errorCont" class="mt-48 w-80 mb-4 text-red-600 text-xs px-4"></div>
+            <form @submit.prevent="validateSign" class="border p-4 text-gray-100 transition-colors w-80">
+                <div class="flex flex-col">
+                    <label class="mt-3 mb-0.5" for="logEmail">Adresse email</label>
+                    <input v-model="signInput.email" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="email" id="logEmail">
+                </div>
+                <div class="flex flex-col">
+                    <label class="mt-3 mb-0.5" for="logPassword">Mot de passe</label>
+                    <input v-model="signInput.password" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="password" id="logPassword">
+                </div>
+                <div class="flex flex-col">
+                    <label class="mt-3 mb-0.5" for="logConfirmPassword">Confirmation mot de passe</label>
+                    <input v-model="signInput.confirm" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="password" id="logConfirmPassword">
+                </div>
             <input class="bg-blue-600 h-8 rounded cursor-pointer text-white w-full mt-6 hover:bg-blue-500 transition-colors" type="submit" value="Créer un compte">
         </form>
         <RouterLink class="w-80" to="/login">
             <p class="text-right text-gray-100 mt-1 transition-colors hover:text-gray-400 hover:transition-colors">Se connecter à un compte</p>
         </RouterLink>
+    </section>
     </main>    
 </template>
 
 <script setup>
     import { onMounted, ref, reactive } from 'vue';
+    import jwt from 'vue-jwt-decode';
+    import Header from '../components/Header.vue';
 
     const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -36,8 +42,25 @@
     });
 
     onMounted(() => {
-        let getToken = localStorage.getItem('vue_polls_token');
+        isLogged();
     });
+
+    /**
+     * check if user is logged
+     */
+    const isLogged = () => {
+        let getToken = localStorage.getItem('vue_polls_token');
+        if (getToken !== null) {
+            let decodedToken = jwt.decode(JSON.parse(getToken).version);
+            const currentDate = Math.floor(Date.now() / 1000);
+
+            if ((decodedToken.exp - currentDate) < 0) {
+                localStorage.removeItem('vue_polls_token');
+            } else {
+                logged.value = true;
+            }
+        }
+    };
 
     /**
      * validate form before sign up
@@ -103,6 +126,14 @@
                 }
             })
             .catch(err => console.log(err));
+    };
+
+    /**
+    * disconnect current user
+    */
+    const logout = () => {
+        localStorage.removeItem('vue_polls_token');
+        logged.value = false;
     };
 </script>
 

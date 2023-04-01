@@ -4,6 +4,7 @@ import App from './App.vue'
 import Home from './view/Home.vue';
 import Log from './view/Log.vue';
 import Sign from './view/Sign.vue';
+import Profil from './view/Profil.vue';
 import NotFound from './view/NotFound.vue';
 
 import './assets/main.css'
@@ -12,6 +13,7 @@ const routes = [
     { path: '/', component: Home },
     { path: '/login', component: Log },
     { path: '/signup', component: Sign },
+    { path: '/profil', component: Profil },
     { path: '/:pathMatch(.*)*', component: NotFound },
 ];
 
