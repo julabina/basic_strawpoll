@@ -6,8 +6,12 @@
             <h2 class="font-bold text-5xl text-blue-300 mt-1 mb-4">Facilement</h2>
             <p class="text-gray-50 w-2/3 text-lg">Vous voulez connaitre les disponibilités de vos amis ou connaitre l'avis de vos collègues sur le nouveau projet ? Créez un sondage et connaissez la réponse à toutes vos questions.</p>
             <div class="mt-7">
-                <input class="bg-gray-50 h-10 w-48 px-4 rounded cursor-pointer text-blue-600 mr-3 transition-colors hover:bg-gray-300 hover:transition-colors" type="button" value="Créer un sondage">
-                <input v-if="logged === false" class="bg-blue-600 h-10 w-48 px-4 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors" type="button" value="S'inscrire">
+                <RouterLink to="/create">
+                    <input class="bg-gray-50 h-10 w-48 px-4 rounded cursor-pointer text-blue-600 mr-3 transition-colors hover:bg-gray-300 hover:transition-colors" type="button" value="Créer un sondage">
+                </RouterLink>
+                <RouterLink to="/sigin">
+                    <input v-if="logged === false" class="bg-blue-600 h-10 w-48 px-4 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors" type="button" value="S'inscrire">
+                </RouterLink>
             </div>
         </section>
     </main>

@@ -116,7 +116,7 @@
                         .then(data => {
                             let error = document.createElement('p');
                             if (data) {
-                                error.textContent = data.message;
+                                error.textContent =  '- ' + data.message;
                             } else {
                                 error.textContent = '- Une erreur est survenue.';
                             }

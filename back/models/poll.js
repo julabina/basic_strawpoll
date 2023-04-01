@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty: {msg: "Le titre ne doit pas etre vide."},
                 notNull: {msg: "Le titre est une propriétée requise."},
                 is: {
-                    args : /^[\w éèêëàâäîïçù\,\.\?\!\€\$\$\"\'\-\(\)]*$/i ,
+                    args : /^[\w éèêëàâäîïçù\,\.\?\!\€\$\"\'\-\(\)]*$/i ,
                     msg: "Format d'email non valide."
                 }
             }
