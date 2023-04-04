@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         userId: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         title: {
             type: DataTypes.STRING,
@@ -45,10 +45,9 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('results', results.join())
             }
         },
-        votePerIp: {
-            type: DataTypes.BOOLEAN,
+        votePer: {
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: true,
         },
         multipleOption: {
             type: DataTypes.BOOLEAN,

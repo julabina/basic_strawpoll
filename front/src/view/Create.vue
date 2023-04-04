@@ -34,12 +34,20 @@
                     <div class="border-b border-gray-100 border-opacity-10 my-6"></div>
                 </div>
                 <div class="flex w-full justify-center py-6">
-                    <div class="flex justify-center items-center w-1/2">
-                        <p class="mr-4">Autoriser plusieurs choix</p>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input v-model="multipleOptions" type="checkbox" value="" class="sr-only peer">
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                        </label>
+                    <div class="flex justify-center items-center flex-col w-1/2">
+                        <div class="flex">
+                            <p class="mr-4">Autoriser plusieurs choix</p>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input v-model="multipleOptions" type="checkbox" value="" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center mt-3" v-if="multipleOptions === true">
+                            <label for="mulptipleNumberSelect" class="mr-8">Réponses maximum</label>
+                            <select v-model="inputs.multipleMax" class="text-gray-900 h-9 mt-1 pl-2 pr-7 rounded-sm cursor-pointer" id="mulptipleNumberSelect">
+                                <option v-for="(opt, ind) in inputs.options" :value="ind + 1">{{ ind + 1 }}</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="border-l border-gray-100 border-opacity-10"></div>
                     <div class="flex justify-center w-1/2">
@@ -74,17 +82,17 @@
     const otherDisplay = ref(true);
     const multipleOptions = ref(false);
     const errorCont = ref(null);
-    const selected = ref('A');
+    const selected = ref('ip');
+    const userId = ref('');
     const inputs = reactive({
         title: "",
         options: ["", ""],
-        double: "",
-        multiple: false,
+        multipleMax: 2,
     });
     const selectOptions = reactive([
-        { text: "Adresse IP", value: "A" },
-        { text: "Une voix par compte", value: "B" },
-        { text: "Pas de vérification", value: "C" },
+        { text: "Adresse IP", value: "ip" },
+        { text: "Une voix par compte", value: "account" },
+        { text: "Pas de vérification", value: "not" },
     ]);
 
     onMounted(() => {
@@ -104,10 +112,9 @@
                 localStorage.removeItem('vue_polls_token');
                 router.push('/login');
             } else {
+                userId.value = JSON.parse(getToken).content;
                 logged.value = true;
             }
-        } else {
-            router.push('/login');
         }
     };
 
@@ -152,13 +159,36 @@
      * create poll on database
      */
     const createPoll = () => {
+        let max = null;
+        let user = null;
+
+        if (multipleOptions.value === true) {
+            max = inputs.multipleMax;
+        }
+        if (logged.value === true) {
+            user = userId.value;
+        }
+
         fetch(apiUrl + "/api/poll/create", {
-            
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({ title: inputs.title, options: inputs.options, double: selected.value, multiple: multipleOptions.value, multipleMax : max, user: user})
         })
             .then(res => {
                 if (res.status === 201) {
                     res.json()
                         .then(data => {
+                            if (data.log && data.log === false) {
+                                const newObj = {
+                                    exp : (Math.floor(Date.now() / 1000) + 85000),
+                                    id : data.data
+                                };
+                                localStorage.setItem('vue_poll_temp', JSON.stringify(newObj));
+                            }
+
                             if (data.data) {
                                 router.push('/sondage/' + data.data);
                             } else {
@@ -214,7 +244,6 @@
                 return elInd !== ind;
             });
             inputs.options = arrFiltered;
-            console.log(arrFiltered);
             if (!arrFiltered.includes('Autres') && otherDisplay.value === false) {
                 otherDisplay.value = true;
             }

@@ -5,6 +5,7 @@ import Home from './view/Home.vue';
 import Log from './view/Log.vue';
 import Sign from './view/Sign.vue';
 import Create from './view/Create.vue';
+import Poll from './view/Poll.vue';
 import Profil from './view/Profil.vue';
 import NotFound from './view/NotFound.vue';
 
@@ -15,6 +16,7 @@ const routes = [
     { path: '/login', component: Log },
     { path: '/signup', component: Sign },
     { path: '/create', component: Create },
+    { path: '/sondage/:id', component: Poll },
     { path: '/profil', component: Profil },
     { path: '/:pathMatch(.*)*', component: NotFound },
 ];

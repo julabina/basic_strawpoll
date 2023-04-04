@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const UserModel = require('../models/user');
+const PollModel = require('../models/poll');
 
 const sequelize = new Sequelize(
     'vue_strawpoll',
@@ -22,7 +23,8 @@ const sequelize = new Sequelize(
 );
 
 const User = UserModel(sequelize, DataTypes);
+const Poll = PollModel(sequelize, DataTypes);
 
 module.exports = {
-    User
+    User, Poll
 };

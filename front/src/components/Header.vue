@@ -6,7 +6,9 @@
                     <h2>Vue-polls</h2>
                 </RouterLink>
                 <nav>
-                    <p class="cursor-pointer transition-colors hover:text-gray-400 hover:transition-colors">Créer un sondage</p>
+                    <RouterLink to="/create">
+                        <p class="cursor-pointer transition-colors hover:text-gray-400 hover:transition-colors">Créer un sondage</p>
+                    </RouterLink>
                 </nav>
             </div>
             <div v-if="isLogged === true" class="flex">
