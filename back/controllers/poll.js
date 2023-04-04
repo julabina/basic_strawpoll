@@ -27,6 +27,8 @@ exports.create = (req, res, next) => {
                 userId,
                 title: req.body.title,
                 options: req.body.options,
+                results: [],
+                usersIp: [],
                 votePer: req.body.double,
                 multipleOption : req.body.multiple,
                 multipleMax : req.body.multipleMax,
@@ -50,6 +52,30 @@ exports.create = (req, res, next) => {
                     }
                     res.status(500).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
                 });
+        })
+        .catch(error => res.status(500).json({ message: error }));
+};
+
+exports.getOne = (req, res, next) => {
+    Poll.findByPk(req.params.id)
+        .then(poll => {
+            if (poll === null) {
+                const message = "Aucun sondage trouvé.";
+                return res.status(404).json({ message });
+            }
+
+            User.findByPk(poll.userId)
+                .then(user => {
+                    let username = null;
+
+                    if (user !== null) {
+                        username = user.username;
+                    }
+
+                    const message = "Un sondage a bien été trouvé.";
+                    res.status(200).json({ message, data: poll, username });
+                })
+                .catch(error => res.status(500).json({ message: error }));
         })
         .catch(error => res.status(500).json({ message: error }));
 };

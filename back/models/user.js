@@ -9,6 +9,18 @@ module.exports = (sequelize, DataTypes) => {
                 notNull: {msg: "L'id est une propriétée requise."}
             }
         },
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: {msg: "Le pseudo ne doit pas etre vide."},
+                notNull: {msg: "Le pseudo est une propriétée requise."},
+                is: {
+                    args : /^[\w]*$/i ,
+                    msg: "Le pseudo ne doit contenir que des lettres ou des chiffres."
+                }
+            }
+        },
         email: {
             type: DataTypes.STRING,
             allowNull: false,

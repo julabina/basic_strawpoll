@@ -37,6 +37,7 @@ exports.sign = (req, res, next) => {
                 .then(hash => {
                     const user = new User({
                         id: v4(),
+                        username: req.body.username,
                         email: req.body.email,
                         password: hash
                     });
@@ -116,7 +117,8 @@ exports.login = (req, res, next) => {
                             '' + process.env.VUE_APP_JWT_PRIVATE_KEY + '',
                             { expiresIn: '24h' }
                         ),
-                        message
+                        message,
+                        username: user.username,
                     });
                 })
                 .catch(error => res.status(500).json({ message: error }));

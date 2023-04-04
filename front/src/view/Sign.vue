@@ -6,6 +6,10 @@
             <div ref="errorCont" class="mt-48 w-80 mb-4 text-red-600 text-xs px-4"></div>
             <form @submit.prevent="validateSign" class="border p-4 text-gray-100 transition-colors w-80">
                 <div class="flex flex-col">
+                    <label class="mt-3 mb-0.5" for="logUsername">Nom d'utilisateur</label>
+                    <input v-model="signInput.username" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="text" id="logUsername">
+                </div>
+                <div class="flex flex-col">
                     <label class="mt-3 mb-0.5" for="logEmail">Adresse email</label>
                     <input v-model="signInput.email" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="email" id="logEmail">
                 </div>
@@ -38,7 +42,8 @@
     const signInput = reactive({
         email: "",
         password: "",
-        confirm: ""
+        confirm: "",
+        username: "",
     });
 
     onMounted(() => {
@@ -70,7 +75,7 @@
     const validateSign = () => {
         errorCont.value.innerHTML = "";
         
-        if (signInput.email === "" || signInput.password === "" || signInput.confirm === "") {
+        if (signInput.username === "" || signInput.email === "" || signInput.password === "" || signInput.confirm === "") {
             let error = document.createElement('p');
             error.textContent = '- Tous les champs sont requis.';
             return errorCont.value.appendChild(error);
@@ -82,6 +87,11 @@
             return errorCont.value.appendChild(error);
         }
 
+        if (!signInput.email.match(/^[\w]*$/i)) {
+            let error = document.createElement('p');
+            error.textContent = '- Le nom d\'utilisateur ne doit contenir que des lettres ou des chiffres.';
+            return errorCont.value.appendChild(error);
+        }
         if (!signInput.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) {
             let error = document.createElement('p');
             error.textContent = '- L\' email n\'a pas un format valide.';
@@ -106,7 +116,7 @@
                 'Content-Type': 'application/json'
             },
             method: 'POST',
-            body: JSON.stringify({ email: signInput.email, password: signInput.password })
+            body: JSON.stringify({ username: signInput.username , email: signInput.email, password: signInput.password })
         })
             .then(res => {
                 if (res.status === 201) {

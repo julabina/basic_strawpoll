@@ -106,7 +106,8 @@
                         .then(data => {
                             const newObj = {
                                 version: data.token,
-                                content: data.userId
+                                content: data.userId,
+                                username: data.username,
                             };
                             localStorage.setItem('vue_polls_token', JSON.stringify(newObj));
                             router.push('/');

@@ -110,7 +110,6 @@
 
             if ((decodedToken.exp - currentDate) < 0) {
                 localStorage.removeItem('vue_polls_token');
-                router.push('/login');
             } else {
                 userId.value = JSON.parse(getToken).content;
                 logged.value = true;
@@ -181,7 +180,8 @@
                 if (res.status === 201) {
                     res.json()
                         .then(data => {
-                            if (data.log && data.log === false) {
+                            console.log(data);
+                            if (data.log === false) {
                                 const newObj = {
                                     exp : (Math.floor(Date.now() / 1000) + 85000),
                                     id : data.data
@@ -195,6 +195,7 @@
                                 router.push('/');
                             }
                         })
+                        .catch(err => console.log(err));
                 } else {
                     res.json()
                         .then(data => {
@@ -206,8 +207,10 @@
                             }
                             errorCont.value.appendChild(error);
                         })
+                        .catch(err => console.log(err));
                 }
             })
+            .catch(err => console.log(err));
     };
 
     /**

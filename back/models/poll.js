@@ -45,6 +45,16 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('results', results.join())
             }
         },
+        usersIp: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+            get() {
+                return this.getDataValue('usersIp').split(',')
+            },
+            set(usersIp) {
+                this.setDataValue('usersIp', usersIp.join())
+            }
+        },
         votePer: {
             type: DataTypes.STRING,
             allowNull: false,
