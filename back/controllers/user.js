@@ -78,7 +78,6 @@ exports.sign = (req, res, next) => {
  * @param {*} next 
  */
 exports.login = (req, res, next) => {
-    console.log("hola", req.body);
     if (req.body.email === undefined || req.body.password === undefined) {
         const message = 'Des données sont manquantes.';
         return res.status(401).json({ message });

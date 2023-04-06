@@ -21,13 +21,18 @@ exports.create = (req, res, next) => {
             }
 
             const id = v4();
+            let arr = [];
+            
+            for (let i = 0; i < req.body.options.length; i++) {
+                arr.push('0');
+            }
 
             const poll = new Poll({
                 id,
                 userId,
                 title: req.body.title,
                 options: req.body.options,
-                results: [],
+                results: arr,
                 usersIp: [],
                 votePer: req.body.double,
                 multipleOption : req.body.multiple,
@@ -78,4 +83,78 @@ exports.getOne = (req, res, next) => {
                 .catch(error => res.status(500).json({ message: error }));
         })
         .catch(error => res.status(500).json({ message: error }));
+};
+
+exports.vote = (req, res, next) => {
+    Poll.findByPk(req.params.id)
+        .then(poll => {
+            if (poll === null) {
+                const message = "Aucun sondage trouvé.";
+                return res.status(404).json({ message });
+            }
+            User.findByPk(req.body.userId)
+                .then(user => {
+                    if (user === null && poll.votePer === "account") {
+                        const message = "Aucun utilisateur trouvé.";
+                        return res.status(404).json({ message });
+                    }
+                    if (req.body.value === undefined) {
+                        const message = "Valeur manquante.";
+                        return res.status(401).json({ message });
+                    }
+                    if (poll.votePer === "ip" && poll.usersIp.includes(req.body.ip)) {
+                        const message = "Un vote est déjà lié à cette adresse IP.";
+                        return res.status(403).json({ message });
+                    }
+                    if (poll.votePer === "account" && poll.usersIp.includes(req.body.userId)) {
+                        const message = "Un vote est déjà lié à ce compte.";
+                        return res.status(403).json({ message });
+                    }
+                    if (poll.options[req.body.value] !== req.body.content) {
+                        const message = "La valeur ne correspond pas.";
+                        return res.status(401).json({ message });
+                    }
+                    if (poll.votePer === "ip") {
+                        let ipArr = poll.usersIp;
+                        
+                        if (ipArr.length === 1 && ipArr[0] === "") {
+                            ipArr[0] = req.body.ip;
+                        } else {
+                            ipArr.push(req.body.ip);
+                        }
+
+                        poll.usersIp = ipArr;
+                    } else if (poll.votePer === "account") {
+                        let idArr = poll.usersIp;
+                        
+                        if (idArr.length === 1 && idArr[0] === "") {
+                            idArr[0] = req.body.userId;
+                        } else {
+                            idArr.push(req.body.userId);
+                        }
+
+                        poll.usersIp = idArr;
+                    }
+                    
+                    let arr = [];
+                    
+                    for (let i = 0; i < poll.results.length; i++) {
+                        console.log(i);
+                        if ((req.body.value.indexOf(i) >= 0) === true) {
+                            console.log('HERE');
+                            const val = parseInt(poll.results[i]) + 1;
+                            arr.push(val.toString());    
+                        } else {
+                            arr.push(poll.results[i]);
+                        }             
+                    }
+
+                    poll.results = arr;
+                    poll.save()
+                    .then(() => {
+                        const message = "Vote bien pris en compte.";
+                        res.status(200).json({ message, results: arr });
+                    })
+                })
+        })
 };
