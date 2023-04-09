@@ -1,7 +1,7 @@
 <template>
     <Header :isLogged="logged"/>
     <main class="flex flex-col items-center bg-violet-950 min-h-screen">
-        <section class=" flex flex-col items-center w-2/3">
+        <section class="flex flex-col items-center w-2/3">
             <div v-if="notLogPoll.status === true" class="bg-red-600 bg-opacity-30 p-5 rounded w-2/3 mt-10">
                 <p class="text-red-700">Ce sondage à une durée temporaire, expiration  {{ notLogPoll.exp }}</p>
                 <p class="text-red-700">Pour obtenir les droits d'administration sur ce sondage, <RouterLink class="underline" to="/signup">Créer un compte gratuit</RouterLink>.</p>
