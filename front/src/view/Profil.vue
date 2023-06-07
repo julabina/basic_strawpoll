@@ -33,6 +33,7 @@
             </div>
         </section>
     </main>
+    <Footer/>
 </template>
 
 <script setup>
@@ -40,6 +41,7 @@
     import jwt from 'vue-jwt-decode';
     import { useRouter } from 'vue-router';
     import Header from '../components/Header.vue';
+    import Footer from '../components/Footer.vue';
 
     const apiUrl = import.meta.env.VITE_API_URL;
 

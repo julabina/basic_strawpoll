@@ -4,7 +4,7 @@
         <section class="flex flex-col items-center w-2/3">
             <div v-if="notLogPoll.status === true" class="bg-red-600 bg-opacity-30 p-5 rounded w-2/3 mt-10">
                 <p class="text-red-700">Ce sondage à une durée temporaire, expiration  {{ notLogPoll.exp }}</p>
-                <p class="text-red-700">Pour obtenir les droits d'administration sur ce sondage, <RouterLink class="underline" to="/signup">Créer un compte gratuit</RouterLink>.</p>
+                <p class="text-red-700">Pour obtenir les droits d'administration sur ce sondage, <span v-if="logged === false"><RouterLink class="underline" to="/signup">Créer un compte gratuit</RouterLink></span><span v-else><RouterLink class="underline" to="/profil">Allez sur votre page profil</RouterLink></span>.</p>
             </div>
             <div ref="errorCont" class="mt-10 w-2/3 mb-4 text-red-600 text-xs px-5"></div>
             <div class="border text-gray-100 p-5 rounded w-2/3">
@@ -34,11 +34,13 @@
             </div>
         </section>
     </main>
+    <Footer/>
 </template>
 
 <script setup>
     import { onMounted, reactive, ref } from 'vue';
     import Header from '../components/Header.vue';
+    import Footer from '../components/Footer.vue';
     import { useRoute, useRouter } from 'vue-router';
     import jwt from 'vue-jwt-decode';
 

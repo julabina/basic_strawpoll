@@ -1,6 +1,6 @@
 <template>
     <Header class="z-20" :isLogged="logged"/>
-    <main class="-z-10 fixed top-12 bottom-0 left-0 right-0 bg-violet-950">
+    <main class="-z-10 fixed top-0 bottom-0 left-0 right-0 bg-violet-950">
         <section class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-violet-900 w-2/3 px-20 py-28 rounded-lg">
             <h1 class="font-bold text-5xl text-gray-50">Créer votre sondage</h1>
             <h2 class="font-bold text-5xl text-blue-300 mt-1 mb-4">Facilement</h2>
@@ -15,11 +15,13 @@
             </div>
         </section>
     </main>
+    <Footer class="absolute bottom-0" />
 </template>
 
 <script setup>
     import { onMounted, ref } from 'vue';
     import Header from '../components/Header.vue';
+    import Footer from '../components/Footer.vue';
     import jwt from 'vue-jwt-decode';
 
     const logged = ref(false);

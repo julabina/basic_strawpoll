@@ -68,6 +68,7 @@
             <p v-if="logged === false" class="text-red-600 text-xs mt-9">ATTENTION, vous ne pouvez créé qu'un seul sondage sans être connecté !</p>
         </section>
     </main>
+    <Footer/>
 </template>
 
 <script setup>
@@ -75,6 +76,7 @@
     import jwt from 'vue-jwt-decode';
     import { useRouter } from 'vue-router';
     import Header from '../components/Header.vue';
+    import Footer from '../components/Footer.vue';
 
     const router = useRouter();
     const apiUrl = import.meta.env.VITE_API_URL;
