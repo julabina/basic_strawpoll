@@ -2,9 +2,9 @@
     <Header :isLogged="logged"/>
     <main class="flex flex-col items-center bg-violet-950 min-h-screen">
         <input v-if="logged === true" @click="logout" class="bg-blue-600 w-44 h-8 rounded cursor-pointer text-white mt-48 hover:bg-blue-500 transition-colors" type="button" value="Se deconnecter">
-        <section v-else>
-            <div ref="errorCont" class="mt-48 w-80 mb-4 text-red-600 text-xs px-4"></div>
-            <form @submit.prevent="validateSign" class="border p-4 text-gray-100 transition-colors w-80">
+        <section class="w-full lg:w-auto px-2 lg:px-0" v-else>
+            <div ref="errorCont" class="mt-48 w-full lg:w-80 mb-4 text-red-600 text-xs px-4"></div>
+            <form @submit.prevent="validateSign" class="border p-4 text-gray-100 transition-colors w-full lg:w-80">
                 <div class="flex flex-col">
                     <label class="mt-3 mb-0.5" for="logUsername">Nom d'utilisateur</label>
                     <input v-model="signInput.username" class="h-8 bg-violet-950 border border-gray-300 pl-4" type="text" id="logUsername">
@@ -23,7 +23,7 @@
                 </div>
             <input class="bg-blue-600 h-8 rounded cursor-pointer text-white w-full mt-6 hover:bg-blue-500 transition-colors" type="submit" value="Créer un compte">
         </form>
-        <RouterLink class="w-80" to="/login">
+        <RouterLink class="w-full lg:w-80" to="/login">
             <p class="text-right text-gray-100 mt-1 transition-colors hover:text-gray-400 hover:transition-colors">Se connecter à un compte</p>
         </RouterLink>
     </section>

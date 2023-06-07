@@ -5,22 +5,22 @@
         <section v-if="tempPoll !== null">
             <h1 class="text-lg text-white font-semibold mt-8 text-center mb-8">Sondage temporaire</h1>
 
-            <div class="mb-12">
+            <div class="mb-12 flex flex-col lg:flex-row items-center">
                 <input @click="acceptTempPoll" type="button" value="Enregistrer ce sondage" class="bg-blue-600 h-10 px-4 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors mr-2">
                 <RouterLink :to="'/sondage/' + tempPoll">
-                    <input type="button" value="Voir le sondage" class="bg-blue-600 h-10 px-4 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors mr-2">
+                    <input type="button" value="Voir le sondage" class="bg-blue-600 h-10 px-4 my-5 lg:my-0 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors mr-2">
                 </RouterLink>
                 <input @click="deleteTempPoll" type="button" value="Supprimer ce sondage" class="bg-blue-600 h-10 px-4 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors mr-2">
             </div>
         </section>
-        <section class="flex flex-col items-center w-screen">
+        <section class="flex flex-col items-center w-screen px-2 lg:px-0 mb-5">
             <h1 class="text-lg text-white font-semibold mt-8">{{ polls.length > 0 ? 'Vos sondages' : 'Aucun sondage pour le moment' }}</h1>
             <RouterLink v-if="polls.length === 0" to="/create">
                 <input type="button" value="Créer votre premier sondage" class="bg-blue-600 h-10 mt-12 px-4 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors">
             </RouterLink>
-            <div v-else class="w-3/5 mt-14">
-                <div class="flex items-center w-full justify-between border-2 border-white mb-3 p-4 rounded-sm" v-for="(poll, ind) in polls">
-                    <h2 class="font-semibold text-white">{{ poll.title }}</h2>
+            <div v-else class="w-full lg:w-3/5 mt-14">
+                <div class="flex flex-col lg:flex-row items-center w-full justify-between border-2 border-white mb-3 p-4 rounded-sm" v-for="(poll, ind) in polls">
+                    <h2 class="font-semibold text-white mb-5 lg:mb-0">{{ poll.title }}</h2>
                     <div class="overflow-hidden">
                         <RouterLink :to="'/sondage/' + poll.id">
                             <input class="bg-blue-600 h-10 px-4 rounded cursor-pointer text-white transition-colors hover:bg-blue-500 hover:transition-colors mr-2" type="button" value="Sondage">

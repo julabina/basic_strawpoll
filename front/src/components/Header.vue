@@ -1,6 +1,6 @@
 <template>
     <header class="flex justify-center border-b pb-5 bg-violet-950">
-        <div class="flex justify-between w-2/3 mt-4">
+        <div class="flex justify-between w-full lg:w-2/3 mt-4 px-4 lg:px-0">
             <div class="flex h-8 items-center text-white">
                 <RouterLink class="mr-7" to="/">
                     <h2>Vue-polls</h2>

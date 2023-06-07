@@ -2,9 +2,9 @@
     <Header :isLogged="logged"/>
     <main class="flex flex-col items-center bg-violet-950 min-h-screen">
         <h1 class="font-bold text-3xl text-gray-50 mt-8 mb-10">Créer un sondage</h1>
-        <section class=" flex flex-col items-center w-2/3 mb-24">
-            <div ref="errorCont" class="w-2/3 mb-4 text-red-600 text-xs px-4"></div>
-            <form @submit.prevent="validateCreate" class="border p-4 text-gray-100 transition-colors w-2/3">
+        <section class=" flex flex-col items-center w-full lg:w-2/3 mb-24 px-2 lg:px-0">
+            <div ref="errorCont" class="w-full lg:w-2/3 mb-4 text-red-600 text-xs px-4"></div>
+            <form @submit.prevent="validateCreate" class="border p-4 text-gray-100 transition-colors w-full lg:w-2/3">
                 <div class="flex flex-col mb-8">
                     <label class="mt-3 mb-0.5" for="createTitle">Titre</label>
                     <input v-model="inputs.title" class="h-9 bg-violet-950 border border-gray-300 pl-4" type="text" id="createTitle">
@@ -33,8 +33,8 @@
                     </div>
                     <div class="border-b border-gray-100 border-opacity-10 my-6"></div>
                 </div>
-                <div class="flex w-full justify-center py-6">
-                    <div class="flex justify-center items-center flex-col w-1/2">
+                <div class="flex flex-col sm:flex-row w-full justify-center py-6">
+                    <div class="flex justify-center items-center flex-col w-full sm:w-1/2">
                         <div class="flex">
                             <p class="mr-4">Autoriser plusieurs choix</p>
                             <label class="relative inline-flex items-center cursor-pointer">
@@ -49,8 +49,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="border-l border-gray-100 border-opacity-10"></div>
-                    <div class="flex justify-center w-1/2">
+                    <div class="border-b my-10 sm:my-0 sm:border-l border-gray-100 border-opacity-10"></div>
+                    <div class="flex justify-center w-full sm:w-1/2">
                         <div class="flex flex-col">
                             <label for="createSelect">Vérification des doublons</label>
                             <select v-model="selected" class="text-gray-900 h-9 mt-1 pl-2 pr-7 rounded-sm cursor-pointer" id="createSelect">

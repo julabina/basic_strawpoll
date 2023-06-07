@@ -1,7 +1,7 @@
 <template>
     <Header :isLogged="logged"/>
-    <main class="flex flex-col items-center bg-violet-950 min-h-screen">
-        <section class="border text-gray-100 p-5 rounded w-2/3 mt-32">
+    <main class="flex flex-col items-center bg-violet-950 min-h-screen px-2 lg:px-0">
+        <section class="border text-gray-100 p-5 rounded w-full lg:w-2/3 mt-32">
             <h1 class="text-gray-50 font-bold text-2xl mb-7 pl-0.5">{{ pollData.title }}</h1>
             <div class="w-full">
                 <div v-for="(result, ind) in results.resultPercent" class="mb-4">
