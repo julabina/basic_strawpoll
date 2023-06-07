@@ -228,4 +228,5 @@ exports.deleteTemp = (req, res, next) => {
                 .catch(error => res.status(500).json({ message: error }));
         })
         .catch(error => res.status(500).json({ message: error }));
+
 };

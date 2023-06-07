@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const userRoute = require('./routes/user');
 const pollRoute = require('./routes/poll');
+const { removeTempExp } = require('./cron/cron-temp');
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use((req, res, next) => {
 });
 
 app.use(morgan('dev'));
+
+removeTempExp();
 
 app.use('/api/user', userRoute);
 app.use('/api/poll', pollRoute);
