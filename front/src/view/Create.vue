@@ -65,6 +65,7 @@
                     <input class="bg-blue-600 h-11 rounded cursor-pointer text-white w-72 mt-6 mb-5 hover:bg-blue-500 transition-colors" type="submit" value="Créer un sondage">
                 </div>
             </form>
+            <p v-if="logged === false" class="text-red-600 text-xs mt-9">ATTENTION, vous ne pouvez créé qu'un seul sondage sans être connecté !</p>
         </section>
     </main>
 </template>

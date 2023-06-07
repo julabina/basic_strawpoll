@@ -34,7 +34,9 @@
     import { onMounted, ref, reactive } from 'vue';
     import jwt from 'vue-jwt-decode';
     import Header from '../components/Header.vue';
+    import { useRouter } from 'vue-router';
 
+    const router = useRouter();
     const apiUrl = import.meta.env.VITE_API_URL;
 
     const logged = ref(false);
@@ -87,7 +89,7 @@
             return errorCont.value.appendChild(error);
         }
 
-        if (!signInput.email.match(/^[\w]*$/i)) {
+        if (!signInput.username.match(/^[\w]*$/i)) {
             let error = document.createElement('p');
             error.textContent = '- Le nom d\'utilisateur ne doit contenir que des lettres ou des chiffres.';
             return errorCont.value.appendChild(error);
@@ -120,7 +122,7 @@
         })
             .then(res => {
                 if (res.status === 201) {
-
+                    logUser(signInput.email, signInput.password);
                 } else {
                     res.json()
                         .then(data => {
@@ -133,6 +135,34 @@
                             errorCont.value.appendChild(error);
                         })
                         .catch(err => console.log(err));
+                }
+            })
+            .catch(err => console.log(err));
+    };
+
+    const logUser = (email, pwd) => {
+        fetch(apiUrl + '/api/user/log',{
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({ email: email, password: pwd })
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    res.json()
+                        .then(data => {
+                            const newObj = {
+                                version: data.token,
+                                content: data.userId,
+                                username: data.username,
+                            };
+                            localStorage.setItem('vue_polls_token', JSON.stringify(newObj));
+                            router.push('/');
+                        })
+                    } else {
+                    router.push('/login');
                 }
             })
             .catch(err => console.log(err));

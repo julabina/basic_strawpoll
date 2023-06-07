@@ -141,7 +141,6 @@ exports.vote = (req, res, next) => {
                     for (let i = 0; i < poll.results.length; i++) {
                         console.log(i);
                         if ((req.body.value.indexOf(i) >= 0) === true) {
-                            console.log('HERE');
                             const val = parseInt(poll.results[i]) + 1;
                             arr.push(val.toString());    
                         } else {
@@ -155,6 +154,78 @@ exports.vote = (req, res, next) => {
                         const message = "Vote bien pris en compte.";
                         res.status(200).json({ message, results: arr });
                     })
+                    .catch(error => res.status(500).json({ message: error }));
                 })
+                .catch(error => res.status(500).json({ message: error }));
         })
+        .catch(error => res.status(500).json({ message: error }));
+};
+
+exports.getAll = (req, res, next) => {
+    Poll.findAll({ where : { userId: req.params.id } })
+        .then(polls => {
+            if (polls === null || polls.length === 0) {
+                const message = "Aucun sondage trouvé.";
+                return res.status(404).json({ message });
+            }
+            
+            const message = "Des sondages ont été trouvés.";
+            res.status(200).json({ message, data: polls });
+        })
+        .catch(error => res.status(500).json({ message: error }));
+};
+
+exports.acceptTemp = (req, res, next) => {
+    console.log(req.body, req.params.id);
+    Poll.findByPk(req.params.id)
+        .then(poll => {
+            if (poll === null) {
+                const message = "Aucun sondage trouvé.";
+                return res.status(404).json({ message });
+            }
+            User.findByPk(req.body.userId)
+                .then(user => {
+                    if (user === null) {
+                        const message = "Aucun utilisateur trouvé.";
+                        return res.status(404).json({ message });
+                    }
+                    
+                    poll.userId = user.id;
+
+                    poll.save()
+                        .then(() => {
+                            const message = "Sondage bien modifié.";
+                            res.status(201).json({ message });
+                        })
+                        .catch(error => {
+                            if (error instanceof ValidationError) {
+                                return res.status(401).json({ message: error.message, data: error }); 
+                            }
+                            if (error instanceof UniqueConstraintError) {
+                                return res.status(401).json({ message: error.message, data: error });
+                            }
+                            res.status(500).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
+                        });
+                })
+                .catch(error => res.status(500).json({ message: error }));
+        })
+        .catch(error => res.status(500).json({ message: error }));
+};
+
+exports.deleteTemp = (req, res, next) => {
+    Poll.findByPk(req.params.id)
+        .then(poll => {
+            if (poll === null) {
+                const message = "Aucun sondage trouvé.";
+                return res.status(404).json({ message });
+            }
+
+            Poll.destroy({ where: { id: req.params.id } })
+                .then(() => {
+                    const message = "sondage supprimé.";
+                    res.status(201).json({ message });
+                })
+                .catch(error => res.status(500).json({ message: error }));
+        })
+        .catch(error => res.status(500).json({ message: error }));
 };
