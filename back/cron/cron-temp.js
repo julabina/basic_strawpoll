@@ -14,7 +14,6 @@ const removeTempExp = () => {
                         const createdDate = Date.parse(el.createdAt) / 1000;
                         const expTime = currentDate - createdDate;
 
-                        console.log(expTime);
                         if (expTime > 85000) {
                             Poll.destroy({ where: { id: el.id } });
                         }

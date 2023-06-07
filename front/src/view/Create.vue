@@ -183,7 +183,6 @@
                 if (res.status === 201) {
                     res.json()
                         .then(data => {
-                            console.log(data);
                             if (data.log === false) {
                                 const newObj = {
                                     exp : (Math.floor(Date.now() / 1000) + 85000),

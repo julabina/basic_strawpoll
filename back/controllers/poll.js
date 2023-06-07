@@ -139,7 +139,6 @@ exports.vote = (req, res, next) => {
                     let arr = [];
                     
                     for (let i = 0; i < poll.results.length; i++) {
-                        console.log(i);
                         if ((req.body.value.indexOf(i) >= 0) === true) {
                             const val = parseInt(poll.results[i]) + 1;
                             arr.push(val.toString());    
@@ -176,7 +175,6 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.acceptTemp = (req, res, next) => {
-    console.log(req.body, req.params.id);
     Poll.findByPk(req.params.id)
         .then(poll => {
             if (poll === null) {

@@ -108,7 +108,6 @@
                     res.json()
                         .then(data => {
                             polls.value = data.data;
-                            console.log(data);
                         })
                         .catch(err => console.log(err));
                 }

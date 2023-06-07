@@ -172,11 +172,10 @@
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data.ip);
                 userIp.value = data.ip;
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
             });  
     };
 
